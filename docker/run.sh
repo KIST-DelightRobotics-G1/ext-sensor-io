@@ -23,9 +23,12 @@ set -e
 CONTAINER=kist-ext-sensor-io
 
 if [ "$(docker ps -q -f name=^${CONTAINER}$)" ]; then
-    docker exec -it "${CONTAINER}" /bin/bash
+    docker exec -it -e DISPLAY="${DISPLAY}" "${CONTAINER}" /bin/bash
 elif [ "$(docker ps -aq -f name=^${CONTAINER}$)" ]; then
-    docker start -ai "${CONTAINER}"
+    # exec (not start -ai) so each attach picks up the host's CURRENT
+    # DISPLAY — the X display number can change across host X restarts.
+    docker start "${CONTAINER}" >/dev/null
+    docker exec -it -e DISPLAY="${DISPLAY}" "${CONTAINER}" /bin/bash
 else
     xhost +local:root >/dev/null 2>&1 || true
     docker run -it \
