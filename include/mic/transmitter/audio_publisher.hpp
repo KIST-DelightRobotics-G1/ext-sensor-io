@@ -14,8 +14,8 @@ extern "C" { typedef struct _snd_pcm snd_pcm_t; }
 namespace unitree::robot {
 template <typename T> class ChannelPublisher;
 }
-namespace kist_msgs {
-class AudioChunk;
+namespace kist_msgs::msg::dds_ {
+class AudioChunk_;
 }
 
 namespace kist {
@@ -33,7 +33,7 @@ struct MicCaptureConfig {
 
 // Tx thread (capture + publish folded, like the camera encode-publishers):
 // blocking ALSA reads pace the loop — every chunk_ms of interleaved S16_LE
-// PCM becomes one typed DDS message (kist_msgs::AudioChunk). An overrun
+// PCM becomes one typed DDS message (kist_msgs::msg::dds_::AudioChunk_). An overrun
 // (-EPIPE) is recovered with snd_pcm_prepare and counted; the missing
 // audio shows as a stamp_ns jump, not a stall.
 class AudioPublisher {
@@ -57,7 +57,7 @@ public:
 private:
     void run();
 
-    using Pub = unitree::robot::ChannelPublisher<kist_msgs::AudioChunk>;
+    using Pub = unitree::robot::ChannelPublisher<kist_msgs::msg::dds_::AudioChunk_>;
 
     MicCaptureConfig      cfg_;
     snd_pcm_t*            pcm_ = nullptr;

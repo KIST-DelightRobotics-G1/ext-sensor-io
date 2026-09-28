@@ -49,7 +49,7 @@ void DepthPublisher::stop() {
 }
 
 void DepthPublisher::publish(const RvlDepthFrame& frame) {
-    kist_msgs::CompressedDepthFrame msg;
+    kist_msgs::msg::dds_::CompressedDepthFrame_ msg;
     msg.width(uint32_t(frame.width));
     msg.height(uint32_t(frame.height));
     msg.seq(frame.sequence);

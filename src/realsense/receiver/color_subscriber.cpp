@@ -49,7 +49,7 @@ void ColorSubscriber::set_on_frame(OnFrameFn fn) {
 }
 
 void ColorSubscriber::on_color_update(const void* message) {
-    const auto& msg = *static_cast<const kist_msgs::CompressedColorFrame*>(message);
+    const auto& msg = *static_cast<const kist_msgs::msg::dds_::CompressedColorFrame_*>(message);
 
     H264ColorFrame frame;
     frame.width       = int(msg.width());

@@ -129,7 +129,7 @@ void AudioPublisher::run() {
         snd_pcm_uframes_t(int64_t(cfg_.sample_rate) * cfg_.chunk_ms / 1000);
     const size_t frame_bytes = size_t(cfg_.channels) * 2;  // S16_LE
 
-    kist_msgs::AudioChunk msg;
+    kist_msgs::msg::dds_::AudioChunk_ msg;
     msg.sample_rate() = uint32_t(cfg_.sample_rate);
     msg.channels()    = uint32_t(cfg_.channels);
     msg.format()      = "S16_LE";

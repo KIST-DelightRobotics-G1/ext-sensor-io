@@ -8,7 +8,7 @@ namespace kist {
 
 // Compressed depth on the wire. The rt/ prefix keeps it ROS2-tool-visible
 // as /kist/camera/depth/rvl; the codec suffix makes the topic self-
-// describing. The payload is the idlc-generated kist_msgs::CompressedDepthFrame
+// describing. The payload is the idlc-generated kist_msgs::msg::dds_::CompressedDepthFrame_
 // (RVL bitstream in its .data). Lives with the frame contract so Tx and
 // Rx agree without either including the other's header (same as UWB's
 // kUwbPoseTopic in uwb_position.hpp).

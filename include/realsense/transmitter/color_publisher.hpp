@@ -14,15 +14,15 @@
 namespace unitree::robot {
 template <typename T> class ChannelPublisher;
 }
-namespace kist_msgs {
-class CompressedColorFrame;
+namespace kist_msgs::msg::dds_ {
+class CompressedColorFrame_;
 }
 
 namespace kist {
 
 // Tx thread (T2): polls a raw-color buffer, H.264-encodes new frames (via
 // the H264Encoder Module — see h264_encoder.hpp), and publishes them as
-// typed DDS messages (kist_msgs::CompressedColorFrame). Encode and publish
+// typed DDS messages (kist_msgs::msg::dds_::CompressedColorFrame_). Encode and publish
 // run together in this one thread. `source` must outlive this object.
 class ColorPublisher {
 public:
@@ -49,7 +49,7 @@ public:
 private:
     void run();
 
-    using Pub = unitree::robot::ChannelPublisher<kist_msgs::CompressedColorFrame>;
+    using Pub = unitree::robot::ChannelPublisher<kist_msgs::msg::dds_::CompressedColorFrame_>;
 
     DataBuffer<ColorFrame>*      source_ = nullptr;
     std::unique_ptr<H264Encoder> encoder_;

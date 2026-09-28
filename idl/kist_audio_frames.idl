@@ -4,9 +4,18 @@
 // is self-describing (rate/channels/format ride along), so receivers
 // need no out-of-band knowledge of the mic.
 
-module kist_msgs {
+// Type names are the ROS 2 form on purpose: kist_msgs::msg::dds_::<Name>_ is
+// exactly what ROS 2 puts on the wire for a kist_msgs/<Name> message, so ROS
+// nodes (cortex keeps a kist_msgs package with the same fields) subscribe to
+// these topics directly, with no bridge. DDS matches endpoints on topic name
+// AND type name — change one side only and the two simply never see each other.
+// Field layout is unchanged.
 
-    struct AudioChunk {
+module kist_msgs {
+module msg {
+module dds_ {
+
+    struct AudioChunk_ {
         uint64          seq;          // 'sequence' is an IDL keyword
         int64           stamp_ns;     // capture clock at chunk end (epoch ns)
         uint32          sample_rate;  // Hz
@@ -16,4 +25,6 @@ module kist_msgs {
         sequence<octet> data;         // interleaved PCM payload
     };
 
+};
+};
 };

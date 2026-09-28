@@ -52,7 +52,7 @@ void DepthSubscriber::set_on_frame(OnFrameFn fn) {
 }
 
 void DepthSubscriber::on_depth_update(const void* message) {
-    const auto& msg = *static_cast<const kist_msgs::CompressedDepthFrame*>(message);
+    const auto& msg = *static_cast<const kist_msgs::msg::dds_::CompressedDepthFrame_*>(message);
 
     RvlDepthFrame frame;
     frame.width       = int(msg.width());

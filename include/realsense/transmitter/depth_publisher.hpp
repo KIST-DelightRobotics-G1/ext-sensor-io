@@ -14,15 +14,15 @@
 namespace unitree::robot {
 template <typename T> class ChannelPublisher;
 }
-namespace kist_msgs {
-class CompressedDepthFrame;
+namespace kist_msgs::msg::dds_ {
+class CompressedDepthFrame_;
 }
 
 namespace kist {
 
 // Tx thread (T3): polls a raw-depth buffer, RVL-encodes new frames (via the
 // RvlEncoder Module — see rvl_encoder.hpp), and publishes them as typed DDS
-// messages (kist_msgs::CompressedDepthFrame). Encode and publish run
+// messages (kist_msgs::msg::dds_::CompressedDepthFrame_). Encode and publish run
 // together in this one thread. `source` must outlive this object.
 class DepthPublisher {
 public:
@@ -49,7 +49,7 @@ public:
 private:
     void run();
 
-    using Pub = unitree::robot::ChannelPublisher<kist_msgs::CompressedDepthFrame>;
+    using Pub = unitree::robot::ChannelPublisher<kist_msgs::msg::dds_::CompressedDepthFrame_>;
 
     DataBuffer<DepthFrame>* source_ = nullptr;
     RvlEncoder              encoder_;
