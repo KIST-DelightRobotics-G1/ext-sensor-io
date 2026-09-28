@@ -12,14 +12,14 @@
 namespace unitree::robot {
 template <typename T> class ChannelSubscriber;
 }
-namespace kist_msgs {
-class AudioChunk;
+namespace kist_msgs::msg::dds_ {
+class AudioChunk_;
 }
 
 namespace kist {
 
 // Rx half for microphone audio — the audio twin of ColorSubscriber:
-// subscribes to the idlc-generated kist_msgs::AudioChunk, maps it to an
+// subscribes to the idlc-generated kist_msgs::msg::dds_::AudioChunk_, maps it to an
 // AudioChunk, publishes it to a buffer. The buffer is latest-wins, so a
 // consumer that needs EVERY chunk (contiguous audio) must tap the
 // set_on_chunk hook instead of polling. Watchdog clears the buffer after 1s.
@@ -48,7 +48,7 @@ public:
 private:
     void watchdog_loop();
 
-    using Sub = unitree::robot::ChannelSubscriber<kist_msgs::AudioChunk>;
+    using Sub = unitree::robot::ChannelSubscriber<kist_msgs::msg::dds_::AudioChunk_>;
     std::unique_ptr<Sub> sub_;
 
     std::thread       watchdog_thread_;

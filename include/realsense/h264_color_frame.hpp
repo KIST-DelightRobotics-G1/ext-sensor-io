@@ -8,7 +8,7 @@ namespace kist {
 
 // Compressed color on the wire. The rt/ prefix keeps it ROS2-tool-visible
 // as /kist/camera/color/h264; the codec suffix makes the topic self-
-// describing. The payload is the idlc-generated kist_msgs::CompressedColorFrame
+// describing. The payload is the idlc-generated kist_msgs::msg::dds_::CompressedColorFrame_
 // (H.264 NAL units in its .data). Lives with the frame contract so Tx and
 // Rx agree without either including the other's header (same pattern as
 // kCameraDepthTopic).

@@ -49,7 +49,7 @@ void AudioSubscriber::set_on_chunk(OnChunkFn fn) {
 }
 
 void AudioSubscriber::on_audio_update(const void* message) {
-    const auto& msg = *static_cast<const kist_msgs::AudioChunk*>(message);
+    const auto& msg = *static_cast<const kist_msgs::msg::dds_::AudioChunk_*>(message);
 
     AudioChunk chunk;
     chunk.sequence    = msg.seq();

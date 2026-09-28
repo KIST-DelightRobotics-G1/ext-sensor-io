@@ -7,7 +7,7 @@
 namespace kist {
 
 // Audio on the wire. The rt/ prefix keeps it ROS2-tool-visible as
-// /kist/mic/audio; the payload is the idlc-generated kist_msgs::AudioChunk
+// /kist/mic/audio; the payload is the idlc-generated kist_msgs::msg::dds_::AudioChunk_
 // (interleaved PCM in its .data). Lives with the chunk contract so Tx and
 // Rx agree without either including the other's header (same pattern as
 // kCameraColorTopic).

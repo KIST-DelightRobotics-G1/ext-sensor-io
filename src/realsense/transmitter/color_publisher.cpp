@@ -53,7 +53,7 @@ void ColorPublisher::stop() {
 }
 
 void ColorPublisher::publish(const H264ColorFrame& frame) {
-    kist_msgs::CompressedColorFrame msg;
+    kist_msgs::msg::dds_::CompressedColorFrame_ msg;
     msg.width(uint32_t(frame.width));
     msg.height(uint32_t(frame.height));
     msg.seq(frame.sequence);
