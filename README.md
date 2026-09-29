@@ -26,8 +26,8 @@ Sensors: UWB (Decawave DWM1001-dev), RealSense cameras, microphones (ALSA)
 #### 1. Clone Repository
 
 ```bash
-git clone https://github.com/Safety-Node/kist-ext-sensor-io.git
-cd kist-ext-sensor-io
+git clone https://github.com/KIST-DelightRobotics-G1/ext-sensor-io.git
+cd ext-sensor-io
 ```
 
 All following steps run from the repository root.
