@@ -1,0 +1,55 @@
+name: Docker build
+
+# Builds both images docker/build.sh can produce — the x86 workstation one
+# (docker/Dockerfile) and the onboard Jetson one (docker/Dockerfile.aarch64, on
+# GitHub's arm64 runner) — on every PR and push to main, so a compile error
+# shows up on the PR instead of after the merge. Build only: nothing is pushed.
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**']
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**']
+  workflow_dispatch:
+
+concurrency:
+  group: docker-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    name: image (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+            dockerfile: docker/Dockerfile
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            dockerfile: docker/Dockerfile.aarch64
+    steps:
+      # Hosted runners start with ~14 GB free; librealsense, x264 and the
+      # Unitree SDK builds need more headroom.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune -af > /dev/null
+          df -h /
+
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.dockerfile }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: false
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,scope=${{ matrix.arch }},mode=max
