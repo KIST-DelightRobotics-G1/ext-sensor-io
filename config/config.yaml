@@ -56,13 +56,13 @@ realsense_cameras:
   #   enabled: false
   # ---------------------------------------------------------------------
   - name: head
-    serial: "938422073271"
+    serial: "046322250434"
 
   - name: left_wrist
-    serial: "260422272337"
+    serial: "352122270866"
 
   - name: right_wrist
-    serial: "260322270228"
+    serial: "352122271112"
 
 # Settings shared by every microphone. Any `mics` entry may override a field.
 mic_defaults:
@@ -87,6 +87,8 @@ mics:
     channels: 6
 
   - name: uno
-    device: UNO                  # ESI NEVA UNO (44.1k-192k, 2-4ch)
-    sample_rate: 48000
+    device: UNO                  # ESI NEVA UNO (44.1k-192k, 2-4ch; rate must
+                                 # match the device clock — currently 44.1k,
+                                 # check: arecord -D hw:CARD=UNO --dump-hw-params
+    sample_rate: 44100
     channels: 2
