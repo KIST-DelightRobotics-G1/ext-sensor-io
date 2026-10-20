@@ -31,6 +31,11 @@ struct SpatialFilterConfig {
 // 50/60 enables the RGB module's anti-flicker for that mains frequency
 // (0 = leave the device default; D405 has no such option — skipped).
 struct ColorExposureConfig {
+    // Set when a color_exposure block exists in the config. With it set,
+    // auto_exposure is applied EXPLICITLY either way — auto: true re-enables
+    // AE left off by a previous run (the device keeps its last UVC controls
+    // until power-cycled). Without it the device is left untouched.
+    bool configured      = false;
     bool auto_exposure   = true;
     int  exposure        = 0;    // used when auto_exposure=false and > 0
     int  gain            = -1;   // used when auto_exposure=false and >= 0

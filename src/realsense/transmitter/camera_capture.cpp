@@ -14,7 +14,7 @@ namespace {
 // fixed exposure there fixes depth exposure too). Best-effort: unsupported
 // options are skipped, failures warn but never abort capture.
 void apply_color_exposure(rs2::device dev, const ColorExposureConfig& ec) {
-    if (ec.auto_exposure && ec.power_line_freq == 0) return;  // nothing to do
+    if (!ec.configured && ec.power_line_freq == 0) return;  // nothing to do
     for (rs2::sensor& s : dev.query_sensors()) {
         bool has_color = false;
         for (const rs2::stream_profile& p : s.get_stream_profiles())
@@ -24,7 +24,12 @@ void apply_color_exposure(rs2::device dev, const ColorExposureConfig& ec) {
             if (ec.power_line_freq != 0 && s.supports(RS2_OPTION_POWER_LINE_FREQUENCY))
                 s.set_option(RS2_OPTION_POWER_LINE_FREQUENCY,
                              ec.power_line_freq == 50 ? 1.f : 2.f);
-            if (!ec.auto_exposure) {
+            if (ec.configured && ec.auto_exposure) {
+                // Explicit AE on — undoes a fixed exposure left on the device
+                // by a previous run (UVC controls persist until power-cycle).
+                if (s.supports(RS2_OPTION_ENABLE_AUTO_EXPOSURE))
+                    s.set_option(RS2_OPTION_ENABLE_AUTO_EXPOSURE, 1.f);
+            } else if (ec.configured) {
                 if (s.supports(RS2_OPTION_ENABLE_AUTO_EXPOSURE))
                     s.set_option(RS2_OPTION_ENABLE_AUTO_EXPOSURE, 0.f);
                 if (ec.exposure > 0 && s.supports(RS2_OPTION_EXPOSURE))
