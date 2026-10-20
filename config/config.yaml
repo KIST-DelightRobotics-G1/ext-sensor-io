@@ -44,11 +44,15 @@ realsense_defaults:
   #                it fixes DEPTH exposure too (set per-camera, not here!)
   # power_line_freq 50/60 turns on the RGB anti-flicker (0 = leave default).
   # Find good values with realsense-viewer's Color controls under site lighting.
+  # gamma (D455 RGB 100-500, 기본 300): >300이면 하이라이트는 유지한 채
+  # 어두운 영역만 들어올림. backlight_comp 1: 밝은 배경(역광) 보정.
   # color_exposure:
   #   auto: false
-  #   exposure: 166
-  #   gain: 64
+  #   exposure: 83         # 8.3ms의 배수 = 60Hz 조명에서 플리커 없음
+  #   gain: 110
+  #   gamma: 400
   #   power_line_freq: 60
+  #   backlight_comp: 0
 
   # H.264 color encoder (x264)
   color_bitrate_kbps: 4000

@@ -60,6 +60,8 @@ std::vector<CameraSpec> cameras_from_yaml(const YAML::Node& root) {
             ccfg.color_exposure.exposure        = ce["exposure"].as<int>(ccfg.color_exposure.exposure);
             ccfg.color_exposure.gain            = ce["gain"].as<int>(ccfg.color_exposure.gain);
             ccfg.color_exposure.power_line_freq = ce["power_line_freq"].as<int>(ccfg.color_exposure.power_line_freq);
+            ccfg.color_exposure.gamma           = ce["gamma"].as<int>(ccfg.color_exposure.gamma);
+            ccfg.color_exposure.backlight_comp  = ce["backlight_comp"].as<int>(ccfg.color_exposure.backlight_comp);
         }
 
         ecfg.width             = ccfg.color_width;

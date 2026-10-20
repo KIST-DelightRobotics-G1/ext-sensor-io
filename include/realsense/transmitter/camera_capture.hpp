@@ -40,6 +40,10 @@ struct ColorExposureConfig {
     int  exposure        = 0;    // used when auto_exposure=false and > 0
     int  gain            = -1;   // used when auto_exposure=false and >= 0
     int  power_line_freq = 0;    // 0 = leave, else 50 or 60
+    // Tone/exposure helpers, applied regardless of auto_exposure:
+    int  gamma           = 0;    // 0 = leave; D455 RGB 100..500 (300 default) —
+                                 // >300 lifts shadows, barely moves highlights
+    int  backlight_comp  = -1;   // -1 = leave; 0/1 — helps bright backgrounds
 };
 
 struct CameraCaptureConfig {
