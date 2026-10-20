@@ -46,13 +46,12 @@ realsense_defaults:
   # Find good values with realsense-viewer's Color controls under site lighting.
   # gamma (D455 RGB 100-500, 기본 300): >300이면 하이라이트는 유지한 채
   # 어두운 영역만 들어올림. backlight_comp 1: 밝은 배경(역광) 보정.
-  # color_exposure:
-  #   auto: false
-  #   exposure: 83         # 8.3ms의 배수 = 60Hz 조명에서 플리커 없음
-  #   gain: 110
-  #   gamma: 400
-  #   power_line_freq: 60
-  #   backlight_comp: 0
+  # gamma/backlight_comp 예시:
+  #   gamma: 400           # 암부만 들어올림 (플리커와 무관하게 안전)
+  #   backlight_comp: 1    # 밝은 배경 역광 보정
+  color_exposure:
+    auto: true             # 기본 AE — 블록이 있으면 이전 실행이 남긴
+                           # 고정 노출도 시작 시 AE로 복원된다
 
   # H.264 color encoder (x264)
   color_bitrate_kbps: 4000
@@ -76,6 +75,14 @@ realsense_cameras:
   # ---------------------------------------------------------------------
   - name: head
     serial: "046322250434"
+    # D455 실측 튜닝: 실내 60Hz 조명 플리커 + AE 헌팅 → 고정 노출.
+    # 8.3ms(83)의 배수라 고정이어도 플리커 없음. 손목 D405는 AE 유지
+    # (컬러가 스테레오 센서 겸용이라 고정하면 depth 노출도 고정됨).
+    color_exposure:
+      auto: false
+      exposure: 83
+      gain: 64
+      power_line_freq: 60
 
   - name: left_wrist
     serial: "352122270866"
