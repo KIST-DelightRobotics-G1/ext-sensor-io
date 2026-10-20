@@ -24,7 +24,8 @@ struct CameraSpec {
 // name are skipped. Pass Config::instance().root().
 std::vector<CameraSpec> cameras_from_yaml(const YAML::Node& root);
 
-// Just the enabled camera names — the Rx side only needs these to subscribe.
+// ALL named camera entries, `enabled` ignored — the Rx side subscribes by
+// name, and `enabled` only gates capture on the Tx machine.
 std::vector<std::string> camera_names_from_yaml(const YAML::Node& root);
 
 } // namespace kist

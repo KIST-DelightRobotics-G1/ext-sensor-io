@@ -79,8 +79,11 @@ std::vector<std::string> camera_names_from_yaml(const YAML::Node& root) {
     std::vector<std::string> names;
     const YAML::Node cameras = root["realsense_cameras"];
     if (!cameras || !cameras.IsSequence()) return names;
+    // Deliberately ignores `enabled`: that flag gates CAPTURE on the Tx
+    // machine, while this list feeds subscribers — which may run on a machine
+    // whose local config disables the device (e.g. a dev box without it).
+    // Subscribing to a silent topic is harmless (watchdog clears the buffer).
     for (const auto& cam : cameras) {
-        if (!cam["enabled"].as<bool>(true)) continue;
         if (const std::string name = cam["name"].as<std::string>(""); !name.empty())
             names.push_back(name);
     }

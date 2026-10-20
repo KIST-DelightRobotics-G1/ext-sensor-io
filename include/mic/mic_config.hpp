@@ -23,7 +23,8 @@ struct MicSpec {
 // device are skipped. Pass Config::instance().root().
 std::vector<MicSpec> mics_from_yaml(const YAML::Node& root);
 
-// Just the enabled mic names — the Rx side only needs these to subscribe.
+// ALL named mic entries, `enabled` ignored — the Rx side subscribes by
+// name, and `enabled` only gates capture on the Tx machine.
 std::vector<std::string> mic_names_from_yaml(const YAML::Node& root);
 
 } // namespace kist

@@ -43,9 +43,15 @@ std::vector<MicSpec> mics_from_yaml(const YAML::Node& root) {
 }
 
 std::vector<std::string> mic_names_from_yaml(const YAML::Node& root) {
+    // Deliberately ignores `enabled` (it gates CAPTURE on the Tx machine) —
+    // same rationale as camera_names_from_yaml: subscribers may run where the
+    // local config disables the device, and a silent topic is harmless.
     std::vector<std::string> names;
-    for (const auto& s : mics_from_yaml(root))
-        names.push_back(s.name);
+    const YAML::Node mics = root["mics"];
+    if (!mics || !mics.IsSequence()) return names;
+    for (const auto& mic : mics)
+        if (const std::string name = mic["name"].as<std::string>(""); !name.empty())
+            names.push_back(name);
     return names;
 }
 
