@@ -8,6 +8,43 @@
 
 namespace kist {
 
+namespace {
+// Apply the color-exposure config to the sensor(s) producing the COLOR
+// stream (D455: RGB module; D405: the stereo module doubles as color, so a
+// fixed exposure there fixes depth exposure too). Best-effort: unsupported
+// options are skipped, failures warn but never abort capture.
+void apply_color_exposure(rs2::device dev, const ColorExposureConfig& ec) {
+    if (ec.auto_exposure && ec.power_line_freq == 0) return;  // nothing to do
+    for (rs2::sensor& s : dev.query_sensors()) {
+        bool has_color = false;
+        for (const rs2::stream_profile& p : s.get_stream_profiles())
+            if (p.stream_type() == RS2_STREAM_COLOR) { has_color = true; break; }
+        if (!has_color) continue;
+        try {
+            if (ec.power_line_freq != 0 && s.supports(RS2_OPTION_POWER_LINE_FREQUENCY))
+                s.set_option(RS2_OPTION_POWER_LINE_FREQUENCY,
+                             ec.power_line_freq == 50 ? 1.f : 2.f);
+            if (!ec.auto_exposure) {
+                if (s.supports(RS2_OPTION_ENABLE_AUTO_EXPOSURE))
+                    s.set_option(RS2_OPTION_ENABLE_AUTO_EXPOSURE, 0.f);
+                if (ec.exposure > 0 && s.supports(RS2_OPTION_EXPOSURE))
+                    s.set_option(RS2_OPTION_EXPOSURE, float(ec.exposure));
+                if (ec.gain >= 0 && s.supports(RS2_OPTION_GAIN))
+                    s.set_option(RS2_OPTION_GAIN, float(ec.gain));
+                std::cout << "[CameraCapture] fixed exposure on '"
+                          << s.get_info(RS2_CAMERA_INFO_NAME)
+                          << "' (exposure=" << ec.exposure
+                          << " gain=" << ec.gain << ")\n";
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "[CameraCapture] exposure option failed on '"
+                      << s.get_info(RS2_CAMERA_INFO_NAME) << "': "
+                      << e.what() << "\n";
+        }
+    }
+}
+}  // namespace
+
 CameraCapture::CameraCapture() = default;
 CameraCapture::~CameraCapture() { stop(); }
 
@@ -32,6 +69,7 @@ bool CameraCapture::start(const CameraCaptureConfig& config) {
         try {
             depth_scale_ = profile.get_device().first<rs2::depth_sensor>().get_depth_scale();
         } catch (...) {}
+        apply_color_exposure(profile.get_device(), config_.color_exposure);
     } catch (const std::exception& e) {
         std::cerr << "[CameraCapture] RealSense start failed: " << e.what()
                   << "\n  Check the camera USB connection and requested modes.\n";

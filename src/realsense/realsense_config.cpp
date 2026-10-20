@@ -52,6 +52,15 @@ std::vector<CameraSpec> cameras_from_yaml(const YAML::Node& root) {
             ccfg.spatial_filter.smooth_delta = sf["smooth_delta"].as<float>(ccfg.spatial_filter.smooth_delta);
         }
 
+        // color_exposure: the camera's block wins, else the shared default's.
+        if (const YAML::Node ce = cam["color_exposure"] ? cam["color_exposure"]
+                                                        : (def ? def["color_exposure"] : YAML::Node())) {
+            ccfg.color_exposure.auto_exposure   = ce["auto"].as<bool>(ccfg.color_exposure.auto_exposure);
+            ccfg.color_exposure.exposure        = ce["exposure"].as<int>(ccfg.color_exposure.exposure);
+            ccfg.color_exposure.gain            = ce["gain"].as<int>(ccfg.color_exposure.gain);
+            ccfg.color_exposure.power_line_freq = ce["power_line_freq"].as<int>(ccfg.color_exposure.power_line_freq);
+        }
+
         ecfg.width             = ccfg.color_width;
         ecfg.height            = ccfg.color_height;
         ecfg.fps               = ccfg.color_fps;

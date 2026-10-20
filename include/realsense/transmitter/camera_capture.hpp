@@ -23,6 +23,20 @@ struct SpatialFilterConfig {
     float smooth_delta = 20.0f;  // depth-discontinuity tolerance (mm)
 };
 
+// Exposure of the sensor that produces the COLOR stream. Default: device
+// auto-exposure (AE). Fixing it (auto_exposure=false) stops AE hunting and
+// mains-flicker pulsing — units are the sensor's native ones (D455 RGB:
+// ticks of 100 µs, default 156 ≈ 15.6 ms; D405 color rides the stereo
+// sensor: µs — so fixing it fixes DEPTH exposure too). power_line_freq
+// 50/60 enables the RGB module's anti-flicker for that mains frequency
+// (0 = leave the device default; D405 has no such option — skipped).
+struct ColorExposureConfig {
+    bool auto_exposure   = true;
+    int  exposure        = 0;    // used when auto_exposure=false and > 0
+    int  gain            = -1;   // used when auto_exposure=false and >= 0
+    int  power_line_freq = 0;    // 0 = leave, else 50 or 60
+};
+
 struct CameraCaptureConfig {
     // RealSense device serial to open. Empty = first available device. Required
     // to disambiguate when several cameras are attached (multi-camera setups).
@@ -40,6 +54,7 @@ struct CameraCaptureConfig {
     bool align_to_color = true;  // reproject depth into the color frame
 
     SpatialFilterConfig spatial_filter;
+    ColorExposureConfig color_exposure;
 
     std::string depth_frame_id = "camera_depth";
     std::string color_frame_id = "camera_color";
